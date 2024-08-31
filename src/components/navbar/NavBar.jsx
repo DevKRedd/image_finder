@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Drawer, List, ListItem, ListItemText, Divider } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Link } from 'react-router-dom';
 
 const NavBar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -13,8 +14,8 @@ const NavBar = () => {
   };
 
   const menuItems = [
-    'Home',
-    'Favorites',
+    { text: 'Home', path: '/' },
+    { text: 'Favorites', path: '/favorites' },
   ];
 
   const drawerList = () => (
@@ -25,9 +26,9 @@ const NavBar = () => {
       style={{ width: 250 }}
     >
       <List>
-        {menuItems.map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemText primary={text} />
+        {menuItems.map((item) => (
+          <ListItem button key={item.text} component={Link} to={item.path}>
+            <ListItemText primary={item.text} />
           </ListItem>
         ))}
       </List>
