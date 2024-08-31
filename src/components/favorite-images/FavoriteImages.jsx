@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Grid, Card, CardMedia, CardContent, Typography } from '@mui/material';
+// src/components/favorite-images/FavoriteImages.jsx
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Grid, Card, CardMedia, CardContent, Typography, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { removeFavorite } from '../../redux/favoritesSlice';
+
 
 const FavoriteImages = () => {
-    const [favorites, setFavorites] = useState([]);
+    const favorites = useSelector((state) => state.favorites.favorites);
+    const dispatch = useDispatch();
 
-    useEffect(() => {
-        const storedFavorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        setFavorites(storedFavorites);
-        console.log(favorites)
-    }, []);
+    const unfavorite = (image) => {
+        dispatch(removeFavorite(image));
+    }
 
     return (
         <Grid container spacing={2} sx={{ paddingLeft: '50px', paddingRight: '50px', paddingTop: '20px' }}>
@@ -16,6 +20,17 @@ const FavoriteImages = () => {
                 favorites.map((image) => (
                     <Grid item xs={12} sm={6} md={4} key={image.id}>
                         <Card>
+                        <IconButton
+                    aria-label="close"
+                    onClick={() => unfavorite(image)}
+                    sx={{
+                        left: 396,
+                        top: 2,
+                        color: (theme) => theme.palette.grey[500],
+                    }}
+                >
+                    <CloseIcon />
+                    </IconButton>
                             <CardMedia
                                 component="img"
                                 height="300"

@@ -1,29 +1,27 @@
+// src/components/image-results/ImageResultModal.jsx
 import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogTitle, IconButton, Typography, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import FavoriteImages from '../favorite-images/FavoriteImages';
+import { useDispatch, useSelector } from 'react-redux';
+import { addFavorite, removeFavorite } from '../../redux/favoritesSlice';
 
 const ImageResultModal = ({ open, onClose, image }) => {
+    const dispatch = useDispatch();
+    const favorites = useSelector((state) => state.favorites.favorites);
     const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
         if (image) {
-            const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
             setIsFavorite(favorites.some(fav => fav.id === image.id));
         }
-    }, [image]);
+    }, [image, favorites]);
 
     const handleFavoriteToggle = () => {
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        let updatedFavorites;
-
         if (isFavorite) {
-            updatedFavorites = favorites.filter(fav => fav.id !== image.id);
+            dispatch(removeFavorite(image));
         } else {
-            updatedFavorites = [...favorites, image];
+            dispatch(addFavorite(image));
         }
-
-        localStorage.setItem('favorites', JSON.stringify(updatedFavorites));
         setIsFavorite(!isFavorite);
     };
 
