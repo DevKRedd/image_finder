@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TextField, Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import ImageResults from '../image-results/ImageResults';
 import axios from 'axios';
 
 const Search = () => {
@@ -51,7 +52,7 @@ const Search = () => {
 
     return (
         <div>
-            <Box sx={{ display: 'flex', padding: '20px', width: 500, maxWidth: '100%' }}>
+            <Box sx={{ display: 'flex', paddingTop: '20px', paddingBottom: '20px', paddingLeft: '50px', width: 500, maxWidth: '100%' }}>
                 <TextField
                     fullWidth
                     label="Search For Images"
@@ -78,12 +79,8 @@ const Search = () => {
                     </Select>
                 </FormControl>
             </Box>
-            {/* You can use the `images` state to render fetched images */}
-            <Box>
-                {images.map((image) => (
-                    <img key={image.id} src={image.webformatURL} alt={image.tags} style={{ width: '100px', margin: '10px' }} />
-                ))}
-            </Box>
+            {/* Use the ImageResults component to display images */}
+            <ImageResults images={images} />
         </div>
     );
 };
