@@ -1,16 +1,18 @@
 import './App.css';
 import NavBar from './components/navbar/NavBar';
 import Search from './components/search/Search';
-// import {MuiThemeProvider} from "material-ui/styles/MuiThemeProvider";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
-  return (
-<div>
-
-        <NavBar/>
-        <Search/>
-</div>
-  );
+    return (
+        <Router>
+            <NavBar />
+            <Routes>
+                <Route path="/" element={<Search />} />
+                {/* Add more routes as needed */}
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Box, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { TextField, Box, FormControl, InputLabel, MenuItem, Select, Pagination } from '@mui/material';
 import ImageResults from '../image-results/ImageResults';
 import axios from 'axios';
 
@@ -7,6 +7,8 @@ const Search = () => {
     const [searchText, setSearchText] = useState('');
     const [amount, setAmount] = useState(15); // Set default amount
     const [images, setImages] = useState([]);
+    const [page, setPage] = useState(1); // New state for current page
+    const [totalPages, setTotalPages] = useState(1); // New state for total pages
 
     const apiInfo = {
         apiUrl: 'https://pixabay.com/api/',
@@ -23,22 +25,25 @@ const Search = () => {
                         key: apiInfo.apiKey,
                         q: searchText,
                         image_type: 'photo',
-                        per_page: amount, // Use the selected amount of images
+                        per_page: amount,
+                        page: page, // Use the current page
                     },
                 });
                 setImages(response.data.hits); // Update images state with the fetched data
+                setTotalPages(Math.ceil(response.data.totalHits / amount)); // Set total pages based on API response
             } catch (error) {
                 console.error('Error fetching data from API:', error);
             }
         } else {
             setImages([]); // Clear images if the search text is empty
+            setTotalPages(1); // Reset total pages
         }
     };
 
-    // useEffect to call fetchImages whenever searchText or amount changes
+    // useEffect to call fetchImages whenever searchText, amount, or page changes
     useEffect(() => {
         fetchImages();
-    }, [searchText, amount]); // Dependencies array
+    }, [searchText, amount, page]);
 
     // Function to handle the search text change
     const handleSearchChange = (e) => {
@@ -48,6 +53,12 @@ const Search = () => {
     // Function to handle the amount change
     const handleAmountChange = (event) => {
         setAmount(event.target.value);
+        setPage(1); // Reset to the first page when amount changes
+    };
+
+    // Function to handle page change
+    const handlePageChange = (event, value) => {
+        setPage(value);
     };
 
     return (
@@ -81,6 +92,10 @@ const Search = () => {
             </Box>
             {/* Use the ImageResults component to display images */}
             <ImageResults images={images} />
+            {/* Pagination Controls */}
+            <Box sx={{ display: 'flex', justifyContent: 'center', paddingTop: '20px', paddingBottom: '20px' }}>
+                <Pagination count={totalPages} page={page} onChange={handlePageChange} />
+            </Box>
         </div>
     );
 };
